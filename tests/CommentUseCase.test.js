@@ -27,4 +27,44 @@ describe('CommentUseCase', () => {
     expect(fakeCommentRepository.verifyCommentOwner).toHaveBeenCalledWith('comment-123', 'user-123');
     expect(fakeCommentRepository.deleteComment).toHaveBeenCalledWith('comment-123');
   });
+
+  it('does not add a comment when the thread does not exist', async () => {
+    const error = new Error('thread missing');
+    const threadRepository = { verifyThreadExists: jest.fn().mockRejectedValue(error) };
+    const commentRepository = { addComment: jest.fn() };
+    const useCase = new CommentUseCase(commentRepository, threadRepository);
+
+    await expect(useCase.addComment({ threadId: 'missing', content: 'content', owner: 'user-1' }))
+      .rejects.toBe(error);
+    expect(commentRepository.addComment).not.toHaveBeenCalled();
+  });
+
+  it('does not verify comment ownership or delete when the thread does not exist', async () => {
+    const error = new Error('thread missing');
+    const threadRepository = { verifyThreadExists: jest.fn().mockRejectedValue(error) };
+    const commentRepository = {
+      verifyCommentOwner: jest.fn(),
+      deleteComment: jest.fn(),
+    };
+    const useCase = new CommentUseCase(commentRepository, threadRepository);
+
+    await expect(useCase.deleteComment({ threadId: 'missing', commentId: 'comment-1', owner: 'user-1' }))
+      .rejects.toBe(error);
+    expect(commentRepository.verifyCommentOwner).not.toHaveBeenCalled();
+    expect(commentRepository.deleteComment).not.toHaveBeenCalled();
+  });
+
+  it('does not delete a comment when ownership verification fails', async () => {
+    const commentRepository = {
+      verifyCommentOwner: jest.fn().mockRejectedValue(new Error('forbidden')),
+      deleteComment: jest.fn(),
+    };
+    const useCase = new CommentUseCase(commentRepository, {
+      verifyThreadExists: jest.fn().mockResolvedValue(),
+    });
+
+    await expect(useCase.deleteComment({ threadId: 'thread-1', commentId: 'comment-1', owner: 'other-user' }))
+      .rejects.toThrow('forbidden');
+    expect(commentRepository.deleteComment).not.toHaveBeenCalled();
+  });
 });
