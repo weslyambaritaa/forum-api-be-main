@@ -1,6 +1,6 @@
 const pool = require('../src/Infrastructures/Database/postgresPool');
 const PostgresThreadRepository = require('../src/Infrastructures/Repositories/PostgresThreadRepository');
-const NotFoundError = require('../src/Commons/Exceptions/NotFoundError');
+const NotFoundError = require('../src/commons/exceptions/NotFoundError');
 
 describe('PostgresThreadRepository integration', () => {
   afterAll(async () => {

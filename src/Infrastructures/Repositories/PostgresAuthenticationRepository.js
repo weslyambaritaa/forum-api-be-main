@@ -1,5 +1,5 @@
 const AuthenticationRepository = require('../../Domains/Repositories/AuthenticationRepository');
-const InvariantError = require('../../Commons/Exceptions/InvariantError');
+const InvariantError = require('../../commons/exceptions/InvariantError');
 
 class PostgresAuthenticationRepository extends AuthenticationRepository {
   constructor(pool) {

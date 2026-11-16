@@ -1,7 +1,7 @@
 const ReplyRepository = require('../../Domains/Repositories/ReplyRepository');
 const { generateId } = require('../Security/id');
-const NotFoundError = require('../../Commons/Exceptions/NotFoundError');
-const AuthorizationError = require('../../Commons/Exceptions/AuthorizationError');
+const NotFoundError = require('../../commons/exceptions/NotFoundError');
+const AuthorizationError = require('../../commons/exceptions/AuthorizationError');
 
 class PostgresReplyRepository extends ReplyRepository {
   constructor(pool) {

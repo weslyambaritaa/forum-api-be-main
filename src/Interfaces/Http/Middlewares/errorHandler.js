@@ -1,5 +1,5 @@
-const ClientError = require('../../../Commons/Exceptions/ClientError');
-const AuthenticationError = require('../../../Commons/Exceptions/AuthenticationError');
+const ClientError = require('../../../commons/exceptions/ClientError');
+const AuthenticationError = require('../../../commons/exceptions/AuthenticationError');
 
 /* eslint-disable no-unused-vars */
 const errorHandler = (err, req, res, next) => {

@@ -1,4 +1,4 @@
-const InvariantError = require('../../../Commons/Exceptions/InvariantError');
+const InvariantError = require('../../../commons/exceptions/InvariantError');
 
 const USERNAME_MAX_LENGTH = 50;
 const USERNAME_REGEX = /^[\w]+$/;

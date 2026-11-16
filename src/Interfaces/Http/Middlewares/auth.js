@@ -1,4 +1,4 @@
-const AuthenticationError = require('../../../Commons/Exceptions/AuthenticationError');
+const AuthenticationError = require('../../../commons/exceptions/AuthenticationError');
 
 /**
  * Verifies the Bearer access token on the Authorization header and attaches

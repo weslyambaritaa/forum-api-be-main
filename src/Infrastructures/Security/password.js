@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const AuthenticationError = require('../../Commons/Exceptions/AuthenticationError');
+const AuthenticationError = require('../../commons/exceptions/AuthenticationError');
 
 const SALT_ROUNDS = 10;
 

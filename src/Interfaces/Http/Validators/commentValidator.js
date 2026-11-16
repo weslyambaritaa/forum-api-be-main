@@ -1,4 +1,4 @@
-const InvariantError = require('../../../Commons/Exceptions/InvariantError');
+const InvariantError = require('../../../commons/exceptions/InvariantError');
 
 const validateAddCommentPayload = (payload) => {
   const { content } = payload || {};

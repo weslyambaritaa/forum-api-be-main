@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const InvariantError = require('../../Commons/Exceptions/InvariantError');
+const InvariantError = require('../../commons/exceptions/InvariantError');
 
 const generateAccessToken = (payload) => jwt.sign(payload, process.env.ACCESS_TOKEN_KEY, {
   expiresIn: Number(process.env.ACCESS_TOKEN_AGE) || 3000,

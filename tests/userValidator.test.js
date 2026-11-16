@@ -1,5 +1,5 @@
 const { validateAddUserPayload } = require('../src/Interfaces/Http/Validators/userValidator');
-const InvariantError = require('../src/Commons/Exceptions/InvariantError');
+const InvariantError = require('../src/commons/exceptions/InvariantError');
 
 describe('validateAddUserPayload', () => {
   it('throws InvariantError when required property is missing', () => {
