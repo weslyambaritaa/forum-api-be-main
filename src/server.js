@@ -1,6 +1,8 @@
-const createServer = require('./createServer');
+require('dotenv').config();
+const container = require('./Infrastructures/container');
+const createServer = require('./Interfaces/Http/createServer');
 
-const server = createServer();
+const server = createServer(container);
 const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 5000;
 

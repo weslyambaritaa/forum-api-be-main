@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt');
-const AuthenticationError = require('../src/commons/exceptions/AuthenticationError');
-const InvariantError = require('../src/commons/exceptions/InvariantError');
-const AuthenticationService = require('../src/services/AuthenticationService');
-const password = require('../src/utils/password');
+const AuthenticationError = require('../src/Commons/Exceptions/AuthenticationError');
+const InvariantError = require('../src/Commons/Exceptions/InvariantError');
+const AuthenticationUseCase = require('../src/Applications/UseCases/AuthenticationUseCase');
+const password = require('../src/Infrastructures/Security/password');
+const tokenManager = require('../src/Infrastructures/Security/token');
 
 describe('authentication error handling', () => {
   afterEach(() => {
@@ -20,9 +21,11 @@ describe('authentication error handling', () => {
     const authenticationRepository = {
       checkTokenAvailability: jest.fn(),
     };
-    const authenticationService = new AuthenticationService(null, authenticationRepository);
+    const authenticationUseCase = new AuthenticationUseCase(
+      null, authenticationRepository, null, tokenManager
+    );
 
-    await expect(authenticationService.refreshAccessToken('invalid-token'))
+    await expect(authenticationUseCase.refreshAccessToken('invalid-token'))
       .rejects.toThrow(new InvariantError('refresh token tidak valid'));
     expect(authenticationRepository.checkTokenAvailability).not.toHaveBeenCalled();
   });
@@ -31,8 +34,8 @@ describe('authentication error handling', () => {
     const fakePool = {
       query: jest.fn().mockResolvedValue({ rowCount: 0, rows: [] }),
     };
-    const UserRepository = require('../src/repositories/UserRepository');
-    const userRepository = new UserRepository(fakePool);
+    const PostgresUserRepository = require('../src/Infrastructures/Repositories/PostgresUserRepository');
+    const userRepository = new PostgresUserRepository(fakePool);
 
     await expect(userRepository.getPasswordByUsername('nonexistent_user'))
       .rejects.toMatchObject({
@@ -46,11 +49,11 @@ describe('authentication error handling', () => {
     const fakePool = {
       query: jest.fn().mockResolvedValue({ rowCount: 0, rows: [] }),
     };
-    const AuthenticationRepository = require('../src/repositories/AuthenticationRepository');
-    const authenticationRepository = new AuthenticationRepository(fakePool);
-    const authenticationService = new AuthenticationService(null, authenticationRepository);
+    const PostgresAuthenticationRepository = require('../src/Infrastructures/Repositories/PostgresAuthenticationRepository');
+    const authenticationRepository = new PostgresAuthenticationRepository(fakePool);
+    const authenticationUseCase = new AuthenticationUseCase(null, authenticationRepository, null, null);
 
-    await expect(authenticationService.logout('invalid-refresh-token'))
+    await expect(authenticationUseCase.logout('invalid-refresh-token'))
       .rejects.toMatchObject({
         name: 'InvariantError',
         statusCode: 400,

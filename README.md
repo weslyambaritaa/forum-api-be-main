@@ -1,5 +1,21 @@
 # forum-api-BE
 
+## Architecture
+
+The project separates business rules from HTTP and PostgreSQL details:
+
+- `src/Domains/Repositories` defines repository contracts used by application flows.
+- `src/Applications/UseCases` contains the forum and authentication use cases.
+- `src/Interfaces/Http` adapts Express routes, controllers, validation, and middleware.
+- `src/Infrastructures` implements PostgreSQL repositories and security services, then
+  wires the adapters together in the composition root.
+- `src/server.js` and `api/index.js` are runtime entry points that supply the
+  composition root to the HTTP application.
+
+Dependencies point inward through constructor injection: use cases receive domain
+repository contracts and security services, while the infrastructure composition
+root supplies their PostgreSQL and security implementations.
+
 ## CI/CD deployment
 
 The `Continuous Integration` workflow runs on pull requests and pushes to
