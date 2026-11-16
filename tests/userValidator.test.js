@@ -1,4 +1,4 @@
-const { validateAddUserPayload } = require('../src/validators/userValidator');
+const { validateAddUserPayload } = require('../src/Interfaces/Http/Validators/userValidator');
 const InvariantError = require('../src/commons/exceptions/InvariantError');
 
 describe('validateAddUserPayload', () => {
