@@ -24,4 +24,31 @@ describe('AddUserUseCase', () => {
     expect(calledWith.password).toEqual('hashed-secret');
     expect(result).toEqual({ id: 'user-123', username: 'dicoding', fullname: 'Dicoding Indonesia' });
   });
+
+  it('does not hash or add a user when the username is unavailable', async () => {
+    const error = new Error('username unavailable');
+    const userRepository = {
+      verifyUsernameAvailable: jest.fn().mockRejectedValue(error),
+      addUser: jest.fn(),
+    };
+    const passwordManager = { hash: jest.fn() };
+    const useCase = new AddUserUseCase(userRepository, passwordManager);
+
+    await expect(useCase.addUser({ username: 'taken', password: 'secret', fullname: 'Name' })).rejects.toBe(error);
+    expect(passwordManager.hash).not.toHaveBeenCalled();
+    expect(userRepository.addUser).not.toHaveBeenCalled();
+  });
+
+  it('does not add a user when password hashing fails', async () => {
+    const error = new Error('hash failed');
+    const userRepository = {
+      verifyUsernameAvailable: jest.fn().mockResolvedValue(),
+      addUser: jest.fn(),
+    };
+    const passwordManager = { hash: jest.fn().mockRejectedValue(error) };
+    const useCase = new AddUserUseCase(userRepository, passwordManager);
+
+    await expect(useCase.addUser({ username: 'alice', password: 'secret', fullname: 'Name' })).rejects.toBe(error);
+    expect(userRepository.addUser).not.toHaveBeenCalled();
+  });
 });
